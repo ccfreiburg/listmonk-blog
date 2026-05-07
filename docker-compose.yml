@@ -1,0 +1,84 @@
+services:
+  ccfreiburg.lists.app:
+    image: listmonk/listmonk:latest
+    container_name: ccfreiburg.lists.app
+    restart: unless-stopped
+    expose:
+      - "9000"
+    hostname: lists.ccfreiburg.de
+    depends_on:
+      - ccfreiburg.lists.db
+    command:
+      [
+        sh,
+        -c,
+        "./listmonk --install --idempotent --yes --config '' && ./listmonk
+          --upgrade --yes --config '' && ./listmonk --config ''",
+      ]
+
+    environment:
+      LISTMONK_app__address: 0.0.0.0:9000
+      LISTMONK_db__user: listmonk
+      LISTMONK_db__password: uzcUXg1z8PPzc5Im
+      LISTMONK_db__database: listmonk
+      LISTMONK_db__host: ccfreiburg.lists.db
+      LISTMONK_db__port: 5432
+      LISTMONK_db__ssl_mode: disable
+      LISTMONK_db__max_open: 25
+      LISTMONK_db__max_idle: 25
+      LISTMONK_db__max_lifetime: 300s
+      TZ: Etc/UTC
+      LISTMONK_ADMIN_USER: admin
+      LISTMONK_ADMIN_PASSWORD: 
+      VIRTUAL_HOST: lists.ccfreiburg.de
+      VIRTUAL_PORT: 9000
+      LETSENCRYPT_HOST: lists.ccfreiburg.de
+
+    volumes:
+      - uploads:/listmonk/uploads:rw
+
+  ccfreiburg.lists.db:
+    image: postgres:17-alpine
+    container_name: ccfreiburg.lists.db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: listmonk
+      POSTGRES_PASSWORD: uzcUXg1z8PPzc5Im
+      POSTGRES_DB: listmonk
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U listmonk" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  ccfreiburg.blog:
+    build:
+      context: ./blog
+      dockerfile: Dockerfile
+    container_name: ccfreiburg.blog
+    restart: unless-stopped
+    expose:
+      - "3000"
+    hostname: blog.ccfreiburg.de
+    depends_on:
+      - ccfreiburg.lists.app
+    environment:
+      LISTMONK_URL: http://ccfreiburg.lists.app:9000
+      LISTMONK_USER: admin
+      LISTMONK_PASSWORD: 4IYb13Ve
+      SITE_NAME: CCFreiburg Blog
+      SITE_DESCRIPTION: News and updates from CCFreiburg.
+      VIRTUAL_HOST: blog.ccfreiburg.de
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: blog.ccfreiburg.de
+
+volumes:
+  data:
+  uploads:
+
+networks:
+  default:
+    name: nginx-proxy
+    external: true
