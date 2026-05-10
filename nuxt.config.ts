@@ -17,13 +17,17 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // Server-only – never exposed to the browser
-    listmonkUrl: process.env.LISTMONK_URL || 'http://ccfreiburg.lists.app:9000',
+    listmonkUrl: process.env.LISTMONK_URL || 'http://localhost:9000',
     listmonkApiUser: process.env.LISTMONK_API_USER || '',
     listmonkApiToken: process.env.LISTMONK_API_TOKEN || '',
     // Exposed to the browser
     public: {
-      siteName: process.env.SITE_NAME || 'CCFreiburg Blog',
-      siteDescription: process.env.SITE_DESCRIPTION || 'News and updates from CCFreiburg.',
+      siteName: process.env.SITE_NAME || 'Blog',
+      siteDescription: process.env.SITE_DESCRIPTION || 'News and Updates',
+      authorName: process.env.AUTHOR_NAME || 'Team',
+      authorRole: process.env.AUTHOR_ROLE || 'Newsletter Author',
+      authorAvatarUrl: process.env.AUTHOR_AVATAR_URL || '',
+      heroImageUrl: process.env.HERO_IMAGE_URL || '',
     },
   },
 

@@ -1,7 +1,7 @@
 <template>
-  <section id="subscribe" class="bg-white rounded-xl border border-gray-200 p-8">
-    <h2 class="text-2xl font-bold text-gray-900 mb-1">Stay up to date</h2>
-    <p class="text-gray-500 mb-6">Get new posts delivered straight to your inbox.</p>
+  <section id="subscribe" class="theme-card p-8">
+    <h2 class="text-2xl font-bold theme-text mb-1">Stay up to date</h2>
+    <p class="theme-muted mb-6">Get new posts delivered straight to your inbox.</p>
 
     <form v-if="!submitted" @submit.prevent="submit" class="flex flex-col gap-4">
       <div class="flex flex-col sm:flex-row gap-3">
@@ -9,30 +9,31 @@
           v-model="name"
           type="text"
           placeholder="Your name (optional)"
-          class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="flex-1 rounded-lg px-4 py-2.5 text-sm theme-input"
         />
         <input
           v-model="email"
           type="email"
           placeholder="you@example.com"
           required
-          class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="flex-1 rounded-lg px-4 py-2.5 text-sm theme-input"
         />
       </div>
 
       <!-- List selection (shown only when there are multiple lists) -->
       <div v-if="availableLists.length > 1" class="flex flex-col gap-2">
-        <p class="text-sm font-medium text-gray-700">Subscribe to:</p>
+        <p class="text-sm font-medium theme-text">Subscribe to:</p>
         <label
           v-for="list in availableLists"
           :key="list.id"
-          class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+          class="flex items-center gap-2 text-sm theme-muted cursor-pointer"
         >
           <input
             type="checkbox"
             :value="list.id"
             v-model="selectedLists"
-            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            class="rounded theme-border"
+            style="accent-color: var(--primary);"
           />
           {{ list.name }}
         </label>
@@ -46,7 +47,7 @@
       <button
         type="submit"
         :disabled="loading || availableLists.length === 0"
-        class="self-start rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
+        class="self-start rounded-lg theme-button disabled:opacity-50 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
       >
         <span v-if="loading">Subscribing…</span>
         <span v-else>Subscribe</span>

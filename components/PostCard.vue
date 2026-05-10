@@ -1,26 +1,35 @@
 <template>
   <article
-    class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col gap-2"
+    class="theme-card rounded-2xl p-6 sm:p-7 hover:-translate-y-0.5 hover:shadow-lg transition duration-200 flex flex-col gap-4"
   >
-    <div class="flex items-center gap-2 text-xs text-gray-400 font-medium uppercase tracking-wide">
-      <time :datetime="date">{{ formattedDate }}</time>
+    <div class="relative flex items-center gap-2 flex-wrap">
+      <time
+        :datetime="date"
+        class="inline-flex items-center rounded-full py-1.5 text-sm font-bold tracking-wide"
+      >
+        {{ formattedDate }}
+      </time>
       <template v-if="post.tags?.length">
-        <span>&middot;</span>
-        <span v-for="tag in post.tags" :key="tag" class="bg-blue-50 text-blue-600 rounded px-2 py-0.5">
+        <span class="theme-muted text-sm font-medium">&middot;</span>
+        <span v-for="tag in post.tags" :key="tag" class="theme-tag rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide">
           {{ tag }}
         </span>
       </template>
     </div>
 
-    <NuxtLink :to="`/posts/${post.id}`">
-      <h2 class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2">
+    <NuxtLink :to="`/posts/${post.id}`" class="group block">
+      <h2 class="text-2xl font-extrabold leading-tight theme-text transition-colors line-clamp-2 group-hover:text-[var(--primary)]">
         {{ post.subject || post.title }}
       </h2>
     </NuxtLink>
 
+    <p class="theme-muted text-sm leading-6 line-clamp-3">
+      {{ post.excerpt || post.summary || 'Read the full update to see the latest encouragements, prayer requests, and ministry news.' }}
+    </p>
+
     <NuxtLink
       :to="`/posts/${post.id}`"
-      class="mt-2 inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium gap-1"
+      class="mt-auto inline-flex items-center text-sm font-semibold theme-link gap-1"
     >
       Read more <span aria-hidden="true">&rarr;</span>
     </NuxtLink>
@@ -28,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const props = defineProps<{
   post: {
     id: number
@@ -36,6 +47,8 @@ const props = defineProps<{
     tags: string[]
     createdAt: string
     sentAt: string | null
+    excerpt?: string | null
+    summary?: string | null
   }
 }>()
 

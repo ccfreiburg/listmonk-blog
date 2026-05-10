@@ -20,13 +20,20 @@ export default defineEventHandler(async () => {
     order: 'DESC',
   })
 
-  return response.data.results.map((c) => ({
-    id: c.id,
-    uuid: c.uuid,
-    title: c.name,
-    subject: c.subject,
-    tags: c.tags ?? [],
-    createdAt: c.created_at,
-    sentAt: c.send_at,
-  }))
+  return response.data.results
+    .map((c) => ({
+      id: c.id,
+      uuid: c.uuid,
+      title: c.name,
+      subject: c.subject,
+      tags: c.tags ?? [],
+      createdAt: c.created_at,
+      sentAt: c.send_at,
+    }))
+    .sort((a, b) => {
+      const aDate = new Date(a.sentAt || a.createdAt).getTime()
+      const bDate = new Date(b.sentAt || b.createdAt).getTime()
+
+      return bDate - aDate
+    })
 })
