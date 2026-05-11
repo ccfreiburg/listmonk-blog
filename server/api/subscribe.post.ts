@@ -8,6 +8,7 @@ interface ListsResponse {
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
+  const config = useRuntimeConfig(event)
 
   const email: string = (body.email ?? '').trim().toLowerCase()
   const name: string = (body.name ?? '').trim()
@@ -20,9 +21,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Invalid email address' })
   }
   const runtime = (globalThis as any).process?.env ?? {}
-  const baseUrl = (runtime.LISTMONK_URL as string) || ''
-  const apiUser = (runtime.LISTMONK_API_USER as string) || ''
-  const apiToken = (runtime.LISTMONK_API_TOKEN as string) || ''
+  const baseUrl = (config.listmonkUrl as string) || (runtime.LISTMONK_URL as string) || ''
+  const apiUser = (config.listmonkApiUser as string) || (runtime.LISTMONK_API_USER as string) || (runtime.LISTMONK_USER as string) || ''
+  const apiToken = (config.listmonkApiToken as string) || (runtime.LISTMONK_API_TOKEN as string) || (runtime.LISTMONK_PASSWORD as string) || ''
 
   if (listIds.length === 0) {
     const res = await fetch(`${baseUrl}/api/lists?per_page=1&page=1`, {

@@ -66,8 +66,9 @@ services:
       - ccfreiburg.lists.app
     environment:
       LISTMONK_URL: http://ccfreiburg.lists.app:9000
-      LISTMONK_USER: admin
-      LISTMONK_PASSWORD: 4IYb13Ve
+      LISTMONK_API_USER: admin
+      LISTMONK_API_TOKEN: 4IYb13Ve
+      SITE_URL: https://blog.ccfreiburg.de
       SITE_NAME: CCFreiburg Blog
       SITE_DESCRIPTION: News and updates from CCFreiburg.
       VIRTUAL_HOST: blog.ccfreiburg.de
