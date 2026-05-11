@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     listmonkApiToken: process.env.LISTMONK_API_TOKEN || '',
     // Exposed to the browser
     public: {
+      siteUrl: process.env.SITE_URL || '',
       siteName: process.env.SITE_NAME || 'Blog',
       siteDescription: process.env.SITE_DESCRIPTION || 'News and Updates',
       authorName: process.env.AUTHOR_NAME || 'Team',

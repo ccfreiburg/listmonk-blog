@@ -18,7 +18,7 @@
           <div>
             <p class="uppercase tracking-[0.18em] text-xs font-semibold theme-muted mb-3">Newsletter</p>
             <h1 class="text-4xl sm:text-5xl font-black leading-tight theme-text">
-              Word & Mission Freiburg Germany
+              Gods Work in Freiburg Germany
             </h1>
             <p class="mt-4 text-base sm:text-lg theme-muted max-w-2xl">
               Encouragements, updates, prayer requests and more from Calvary Chapel Freiburg, Germany. Stay informed about what God is doing in our church and our country. Be encouraged to pray, give, go.
@@ -34,6 +34,19 @@
               >
                 Read latest post
               </NuxtLink>
+              <a
+                href="/rss.xml"
+                class="theme-input inline-flex h-11 w-11 items-center justify-center rounded-lg theme-link"
+                type="application/rss+xml"
+                aria-label="RSS Feed"
+                title="RSS Feed"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+                  <circle cx="6" cy="18" r="2.2" />
+                  <path d="M4 10.5a9.5 9.5 0 0 1 9.5 9.5h-3A6.5 6.5 0 0 0 4 13.5v-3Z" />
+                  <path d="M4 4a16 16 0 0 1 16 16h-3A13 13 0 0 0 4 7V4Z" />
+                </svg>
+              </a>
             </div>
 
 
@@ -42,7 +55,7 @@
           <div class="flex flex-col items-center gap-2 md:items-end">
             <AuthorAvatar :size="160" />
             <p class="font-semibold theme-text text-sm">{{ config.public.authorName }}</p>
-            <p class="text-xs theme-muted">{{ config.public.authorRole }}</p>
+            <p class="text-xs theme-muted text-right">{{ config.public.authorRole }}</p>
           </div>
           </div>
         </section>
@@ -64,18 +77,28 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 
-useHead({ title: config.public.siteName })
+useHead(() => ({
+  title: config.public.siteName,
+  link: [
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: `${config.public.siteName} RSS Feed`,
+      href: '/rss.xml',
+    },
+  ],
+}))
 
-const { data: posts, pending, error } = await useFetch('/api/posts')
+const { data: feedItems, pending, error } = await useFetch('/api/feed')
 
 const postsSorted = computed(() => {
-  if (!posts.value) return []
-  return [...posts.value].sort((a, b) => {
+  if (!feedItems.value) return []
+  return [...feedItems.value].sort((a, b) => {
     const dateA = new Date(a.sentAt || a.createdAt).getTime()
     const dateB = new Date(b.sentAt || b.createdAt).getTime()
     return dateB - dateA
   })
 })
 
-const latestPostLink = computed(() => postsSorted.value?.[0]?.id ? `/posts/${postsSorted.value[0].id}` : '/#subscribe')
+const latestPostLink = computed(() => postsSorted.value?.[0]?.url || '/#subscribe')
 </script>

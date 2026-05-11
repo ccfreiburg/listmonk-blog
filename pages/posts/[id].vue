@@ -32,11 +32,7 @@
           </span>
         </template>
       </div>
-
-      <!-- Title -->
-      <h1 class="text-3xl font-bold theme-text mb-8 leading-snug">
-        {{ post.subject || post.title }}
-      </h1>
+      <P>Calvary Chapel Freiburg, Germany.</P>
 
       <!-- Body -->
       <div class="prose max-w-none theme-prose" v-html="sanitizedBody" />
